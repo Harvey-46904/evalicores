@@ -1,0 +1,46 @@
+
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000; /* Cambia el color según sea necesario */
+  }
+  
+  .fa-shopping-cart {
+    font-size: 1.5rem; /* Ajusta el tamaño del ícono según sea necesario */
+  }
+  
+  .cart-count {
+    position: absolute;
+    top: -10px; /* Ajusta la posición vertical de la bolita */
+    right: -10px; /* Ajusta la posición horizontal de la bolita */
+    background-color: red; /* Cambia el color de fondo de la bolita según sea necesario */
+    color: white;
+    border-radius: 50%;
+    width: 20px; /* Ajusta el tamaño de la bolita */
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem; /* Ajusta el tamaño del texto en la bolita */
+    font-weight: bold;
+  }
+
+  th {
+    white-space: nowrap; /* Evita el salto de línea */
+    width: 150px; /* Ajusta el ancho según sea necesario */
+}
+
+.fondo_naranja{
+  background-color: #f1773e;
+  color: white; 
+}
+.custom-confirm {
+  background-color: #28a745; /* Color verde */
+  color: white; /* Color del texto */
+}
+
+.custom-confirm:hover {
+  background-color: #218838; /* Color verde más oscuro al pasar el ratón */
+}

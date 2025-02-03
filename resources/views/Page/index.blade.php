@@ -7,7 +7,7 @@
 
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <title>Eva Licores</title>
 
     <!-- CSS FILES -->
@@ -347,6 +347,14 @@ T e m p l a t e M o
     </script>
      <script src="js/Products.js"></script>
      <script src="js/carrito.js"></script>
+     <script src="{!! asset('js/app.js') !!}"></script>
+     <script>
+     window.Echo.channel('domis')
+    .listen('NewOrder', (e) => {
+        console.log(e.message);
+    });
+       
+     </script>
 </body>
 
 </html>

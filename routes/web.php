@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', "WebPageController@index");
+Route::get('prueba', function (){
+    return view("prueba");
+});
 Route::get('/orden/{code_orden}', "WebPageController@orden");
 Route::post('/post', "WebPageController@crear_orden");
 

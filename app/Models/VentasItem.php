@@ -16,4 +16,9 @@ class VentasItem extends Model
         'medio_pago',
         'accion',
     ];
+
+    public function scopeOrdenList($query)
+    {
+        return $query->where('accion', "Orden");
+    }
 }

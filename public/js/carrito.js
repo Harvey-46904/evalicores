@@ -18,6 +18,7 @@ let envio_post={
     'medio_pago':"",
     'accion':"",
 }
+let err="Ubicacion tomada correctamente";
 function agregarAlCarrito(producto) {
     console.log(producto);
     
@@ -60,7 +61,7 @@ function eliminarDelCarrito(posicion) {
 }
 
 function generarHtmlProductos(productos) {
-    console.log(productos);
+    
     let contador=1;
     let productoslist=productos.map(producto => `
          
@@ -100,6 +101,12 @@ function operates(incrementar) {
     }
 }
 function abrir_carrito(){
+    if(carrito.length==0){
+        Swal.fire({
+            'html':`  <h3 class="text-dark mb-lg-0 pb-2">Carrito Vacio</h3>`
+        })
+    }else{
+
     Swal.fire({  
         html: `
           <h3 class="text-dark mb-lg-0 pb-2">Tu mejor opción en licores</h3>
@@ -137,6 +144,9 @@ function abrir_carrito(){
          var $button = $('#cant').text(0);
         }
       });
+      
+    }
+    
 }
 
 function ventafinaL(){
@@ -203,7 +213,7 @@ function tipo_orden_pago(){
                         <div class="form-check">
                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="Domicilio">
                         <label class="form-check-label" for="exampleRadios2">
-                            Domicilio
+                            Domicilio (tomaremos su ubicación actual para su envio)
                         </label>
                     </div>
                      <hr>
@@ -241,8 +251,8 @@ function tipo_orden_pago(){
         }
       }).then((result) => {
         if (result.isConfirmed) {
-           cliente.tipo_orden= $('input[name="exampleRadios"]').val();
-            cliente.medio_pago=$('input[name="exampleRadiosb"]').val();
+           cliente.tipo_orden= $('input[name="exampleRadios"]:checked').val();
+            cliente.medio_pago=$('input[name="exampleRadiosb"]:checked').val();
             cliente.token= $('input[name="_token"]').val();
             
            
@@ -261,28 +271,94 @@ function tipo_orden_pago(){
             envio_post.tipo_orden=cliente.tipo_orden;
             envio_post._token=cliente.token;
             envio_post.precio=total;
-            //console.log(envio_post);
-            Swal.close();
-            Swal.fire({ 
-                html:`
-                   <div class="fullscreen">
-        <div class="text-center">
-            <div class="loading-circle"></div>
-            
-        </div>
-        
-    </div>
-    <p class="mt-3">Generando su orden por favor espere...</p>
-                `
-            }); 
+           
 
-            enviar_orden(envio_post);
+            if(envio_post.tipo_orden =="Domicilio"){
+                //tomar cordenadas
+                obtenerCoordenadas()
+    .then(mostrarCoordenadas)
+    .catch(manejarError);
+
+                Swal.close();
+                Swal.fire({ 
+                    html:`
+                            <div class="fullscreen">
+                    <div class="text-center">
+                        <div class="loading-circle"></div>
+                        
+                    </div>
+                    
+                </div>
+                <p class="mt-3">Acepte por favor el permiso de ubicación</p>
+                            `
+                        }); 
+            }else{
+                Swal.close();
+                Swal.fire({ 
+                    html:`
+                            <div class="fullscreen">
+                    <div class="text-center">
+                        <div class="loading-circle"></div>
+                        
+                    </div>
+                    
+                </div>
+                <p class="mt-3">Generando su orden por favor espere</p>
+                            `
+                        }); 
+                enviar_orden(envio_post);
+            }
+
+             // 
+           
+
+          
         } else if (result.isDismissed) {
           // Acción si se cancela
 
          var $button = $('#cant').text(0);
         }
       });
+}
+
+function obtenerCoordenadas() {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                resolve, 
+                reject, 
+                { enableHighAccuracy: true } // Solicita mayor precisión
+            );
+        } else {
+            reject("La geolocalización no es compatible con este navegador.");
+        }
+    });
+}
+function mostrarCoordenadas(position) {
+    const latitud = position.coords.latitude.toFixed(10); // Usa .toFixed para aumentar los decimales
+    const longitud = position.coords.longitude.toFixed(10);
+    envio_post.cordenada = `${latitud},${longitud}`;
+    enviar_orden(envio_post);
+    console.log(`Latitud: ${latitud}, Longitud: ${longitud}`);
+}
+
+function manejarError(error) {
+    let err;
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            err = "El usuario denegó la solicitud de Geolocalización.";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            err = "La información de ubicación no está disponible.";
+            break;
+        case error.TIMEOUT:
+            err = "La solicitud para obtener la ubicación ha caducado.";
+            break;
+        case error.UNKNOWN_ERROR:
+            err = "Ha ocurrido un error desconocido.";
+            break;
+    }
+    console.log(err);
 }
 
 function enviar_orden(cliente){

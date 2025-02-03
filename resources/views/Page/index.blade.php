@@ -23,6 +23,7 @@
     <link href="css/mystyle.css" rel="stylesheet">
     <link href="css/templatemo-festava-live.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         .scroll-container {
   overflow-x: auto; /* Habilita el desplazamiento horizontal */
@@ -347,13 +348,14 @@ T e m p l a t e M o
     </script>
      <script src="js/Products.js"></script>
      <script src="js/carrito.js"></script>
-     <script src="{!! asset('js/app.js') !!}"></script>
+   <!--   <script src="{!! asset('js/app.js') !!}"></script> !-->
      <script>
-     window.Echo.channel('domis')
+    /*  
+    window.Echo.channel('domis')
     .listen('NewOrder', (e) => {
-        console.log(e.message);
+        console.log(e);
     });
-       
+       */
      </script>
 </body>
 
